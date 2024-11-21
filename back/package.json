@@ -25,6 +25,7 @@
     "@types/jest": "^29.5.14",
     "@types/mysql": "^2.15.26",
     "@types/node": "^22.9.1",
+    "dotenv": "^16.4.5",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.9.0",

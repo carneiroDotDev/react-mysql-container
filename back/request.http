@@ -10,7 +10,7 @@ Content-Type: application/json
     "deviceName": "test",
     "deviceType": "Cellphone",
     "ownerName": "luiz",
-    "batteryStatus": 13
+    "batteryStatus": 16
 }
 
 ###Patch a device
@@ -20,7 +20,7 @@ Content-Type: application/json
 {
     "deviceName": "Patched",
     "deviceType": "Tablet",
-    "ownerName": "luiz",
+    "ownerName": "luizzz",
     "batteryStatus": 55
 }
 

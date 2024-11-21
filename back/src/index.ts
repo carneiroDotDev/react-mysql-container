@@ -1,13 +1,16 @@
+import 'dotenv/config'
 import express from "express";
 import mysql from "mysql";
+import { DeviceRequest } from "./index.types.js";
 
 const app = express();
+const {DB_HOST, DB_USER, DB_PASSWORD, DB_NAME} = process.env;
 
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "koerber",
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME,
 });
 
 app.use(express.json());
@@ -20,30 +23,23 @@ app.get("/devices", (req, res) => {
   });
 });
 
-app.post("/devices", (req, res) => {
-  const deviceName = req.body.deviceName;
-  const deviceType = req.body.deviceType;
-  const ownerName = req.body.ownerName;
-  const batteryStatus = req.body.batteryStatus;
+const devicePostRequest: DeviceRequest = (req, res) => {
+  const { deviceName, deviceType, ownerName, batteryStatus } = req.body;
 
   const query =
     "INSERT INTO `koerber`.`devices` (`deviceName`, `deviceType`, `ownerName`, `batteryStatus`) VALUES (?)";
   const values = [deviceName, deviceType, ownerName, batteryStatus];
-  console.log(values);
 
   db.query(query, [values], (error, data) => {
     if (error) return res.json(error);
     return res.json(`${deviceName} device created successfully!`);
   });
-});
+}
+app.post("/devices", devicePostRequest);
 
-app.put("/devices/:id", (req, res) => {
+const devicePatchRequest: DeviceRequest<{id: string}> = (req, res) => {
   const deviceId = req.params.id;
-
-  const deviceName = req.body.deviceName;
-  const deviceType = req.body.deviceType;
-  const ownerName = req.body.ownerName;
-  const batteryStatus = req.body.batteryStatus;
+  const { deviceName, deviceType, ownerName, batteryStatus } = req.body;
 
   const query =
     "UPDATE `koerber`.`devices` SET `deviceName` = ?, `deviceType` = ?, `ownerName` = ?, `batteryStatus` = ? WHERE (`id` = ?)";
@@ -53,9 +49,10 @@ app.put("/devices/:id", (req, res) => {
     if (error) return res.json(error);
     return res.json(`${deviceName} has been patched successfully!`);
   });
-});
+};
+app.put("/devices/:id", devicePatchRequest);
 
-app.delete("/devices/:id", (req, res) => {
+const deleteDeviceRequest: DeviceRequest<{id: string}> = (req, res) => {
   const deviceId = req.params.id;
   const query = "DELETE FROM `koerber`.`devices` WHERE (`id` = ?)";
 
@@ -63,7 +60,8 @@ app.delete("/devices/:id", (req, res) => {
     if (error) return res.json(error);
     return res.json(`Device deleted successfully!`);
   });
-});
+}
+app.delete("/devices/:id", deleteDeviceRequest);
 
 app.listen(8800, () => {
   console.log("Server started successfully!");
