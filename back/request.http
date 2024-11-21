@@ -1,0 +1,28 @@
+### List all devices
+GET http://localhost:8800/devices
+
+
+### Create a new device
+POST http://localhost:8800/devices
+Content-Type: application/json
+
+{
+    "deviceName": "test",
+    "deviceType": "Cellphone",
+    "ownerName": "luiz",
+    "batteryStatus": 13
+}
+
+###Patch a device
+PUT   http://localhost:8800/devices/3
+Content-Type: application/json
+
+{
+    "deviceName": "Patched",
+    "deviceType": "Tablet",
+    "ownerName": "luiz",
+    "batteryStatus": 55
+}
+
+### Delete a device
+DELETE http://localhost:8800/devices/1
