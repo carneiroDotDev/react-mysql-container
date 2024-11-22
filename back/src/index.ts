@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import express from "express";
 import mysql from "mysql";
+import cors from "cors";
+
 import { DeviceRequest } from "./index.types.js";
 
 const app = express();
@@ -14,6 +16,7 @@ const db = mysql.createConnection({
 });
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/devices", (req, res) => {
   const query = "SELECT * FROM devices";
