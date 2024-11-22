@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<DisplayDevicesPage />} />
         <Route path="/add" element={<AddDevicesPage />}/>
-        <Route path="/update" element={<UpdateDevicesPage />}/>
+        <Route path="/update/:id" element={<UpdateDevicesPage />}/>
       </Routes>
       </Router>
       </QueryClientProvider>

@@ -5,7 +5,7 @@ interface DeviceRequest<Params = unknown> extends RequestHandler<Params, unknown
 interface Device {
   id: number;
   deviceName: string;
-  deviceType: string;
+  deviceType: 'SMARTPHONE' | 'CAMERA' | 'TABLET';
   ownerName: string;
   batteryStatus: number;
 }

@@ -26,6 +26,16 @@ app.get("/devices", (req, res) => {
   });
 });
 
+app.get("/devices/:id", (req, res) => {
+  const deviceId = req.params.id;
+  const query = "SELECT * FROM devices WHERE (`id` = ?)";
+
+  db.query(query, [deviceId], (error, data) => {
+    if (error) return res.json(error);
+    return res.json(data);
+  });
+});
+
 const devicePostRequest: DeviceRequest = (req, res) => {
   const { deviceName, deviceType, ownerName, batteryStatus } = req.body;
 
