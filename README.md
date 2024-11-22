@@ -21,12 +21,16 @@ CREATE TABLE `koerber`.`devices` (
 
 ## Backend
 To start the server:
-> cd back/
-> npm i
-> npm run dev
+```
+cd back/
+npm i
+npm run dev
+```
 
 ## Frontend
 To start the react app:
-> cd front/
-> npm i
-> npm run dev
+```
+cd front/
+npm i
+npm run dev
+```
