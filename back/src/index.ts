@@ -9,10 +9,10 @@ const app = express();
 const {DB_HOST, DB_USER, DB_PASSWORD, DB_NAME} = process.env;
 
 const db = mysql.createConnection({
-  host: DB_HOST,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
+  host: DB_HOST || 'localhost',
+  user: DB_USER || 'root',
+  password: DB_PASSWORD || 'mysqldatabase',
+  database: DB_NAME || 'koerber',
 });
 
 app.use(express.json());
