@@ -3,9 +3,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { DisplayDevicesPage } from './pages/DisplayDevicesPage'
 import { AddDevicesPage } from './pages/AddDevicesPage'
 import { UpdateDevicesPage } from './pages/UpdateDevicesPage'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
+
 
 function App() {
   return (
+    <QueryClientProvider client={queryClient}>
       <Router>
       <Routes>
         <Route path="/" element={<DisplayDevicesPage />} />
@@ -13,6 +21,7 @@ function App() {
         <Route path="/update" element={<UpdateDevicesPage />}/>
       </Routes>
       </Router>
+      </QueryClientProvider>
   )
 }
 
