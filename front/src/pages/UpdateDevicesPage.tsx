@@ -1,42 +1,28 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './AddDevicesPage.css'
 import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useUpdateDevice, useSingleDevice } from '../hooks'
 import { Device } from './types'
 
 export const UpdateDevicesPage = () => {
     const navigate = useNavigate()
     const deviceId = useLocation().pathname.split('/')[2]
 
-    const { isPending, error, data: device } = useQuery<Device[]>({
-        queryKey: ['displayDevices'],
-        queryFn: () =>
-          fetch(`http://localhost:8800/devices/${deviceId}`).then((res) =>
-            res.json(),
-          ),
-      })
-      
+    const { isPending, error, data: device } = useSingleDevice(deviceId)
+    const { mutate: updateDevice } = useUpdateDevice(deviceId)
     const [missInfo, setMissInfo] = useState(false)
-    const [updatedDevice, setUpdatedDevice] =  useState({
-        deviceName: '',
-        deviceType: '',
-        ownerName: '',
-        batteryStatus: ''
-    })
+    const [updatedDevice, setUpdatedDevice] =  useState<Omit<Device,"id">>(device)
 
     useEffect(() => {
         if(device?.length){
             const { deviceName, deviceType, ownerName, batteryStatus } = device[0]
-            setUpdatedDevice({deviceName, deviceType, ownerName, batteryStatus: String(batteryStatus)})
+            setUpdatedDevice({deviceName, deviceType, ownerName, batteryStatus: batteryStatus})
         }
     } , [device])
-
-
 
   if (isPending) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
-
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) =>{
         setUpdatedDevice(prev=>({
@@ -52,14 +38,9 @@ export const UpdateDevicesPage = () => {
             return
         }
         try{
-            await fetch(`http://localhost:8800/devices/${deviceId}`, {
-                method: "PUT",
-                body: JSON.stringify(updatedDevice),
-                headers: {
-                  "Content-Type": "application/json",
-                },
-        })
-    } catch(err){
+            updateDevice(updatedDevice)
+        }
+    catch(err){
         console.log(err)
     }
         setMissInfo(false)

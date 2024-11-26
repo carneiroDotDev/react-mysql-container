@@ -1,13 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom'
 import './AddDevicesPage.css'
 import { useState } from 'react'
+import {usePostDevice} from '../hooks'
+import { Device } from './types'
 
 export const AddDevicesPage = () => {
-    const [device, setDevice] =  useState({
+    const {mutate: postDevice} = usePostDevice()
+    const [device, setDevice] =  useState<Omit<Device,"id">>({
         deviceName: '',
         deviceType: 'SMARTPHONE',
         ownerName: '',
-        batteryStatus: '100'
+        batteryStatus: 100
     })
     const [missInfo, setMissInfo] = useState(false)
     const navigate = useNavigate()
@@ -27,13 +30,8 @@ export const AddDevicesPage = () => {
             return
         }
         try{
-            await fetch("http://localhost:8800/devices", {
-                method: "POST",
-                body: JSON.stringify(device),
-                headers: {
-                  "Content-Type": "application/json",
-                },
-        })
+            postDevice(device)
+        
     } catch(err){
         console.log(err)
     }

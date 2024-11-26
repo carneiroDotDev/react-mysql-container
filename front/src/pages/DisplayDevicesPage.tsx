@@ -1,42 +1,25 @@
-import {
-    useQuery,
-  } from '@tanstack/react-query'
-import { Device } from './types'
 import { Link } from 'react-router-dom'
 
-const handleDelete = async (id: number) => {
-    try{
-        await fetch(`http://localhost:8800/devices/${id}`, {
-            method: "DELETE",
-    })
-    window.location.reload()
-    } catch(err){
-        console.log(err)
-    }
-}
+import {useDevices, useDeleteDevice} from '../hooks'
+import { Device } from './types'
 
 const Card = ({ id, deviceName, deviceType, ownerName, batteryStatus }: Device) => {
+    const { mutate: deleteDevice } = useDeleteDevice()
     return (<div className="wrapper">
-             <h1>{deviceName}</h1>
+             <p>{deviceName}</p>
              <p>Owner: {ownerName}</p>
              <p>Type: {deviceType}</p>
              <p>Battery: {batteryStatus}%</p>
        <div className="button-wrapper"> 
          <button className="btn outline"><Link to={`/update/${id}`}>Update</Link></button>
-         <button className="btn fill" onClick={()=> handleDelete(id)}>Delete</button>
+         <button className="btn fill" onClick={()=> deleteDevice(id)}>Delete</button>
        </div>
        </div>
         )
 }
 
 export const DisplayDevicesPage = () => {
-    const { isPending, error, data: devices } = useQuery({
-        queryKey: ['displayDevices'],
-        queryFn: () =>
-          fetch('http://localhost:8800/devices').then((res) =>
-            res.json(),
-          ),
-      })
+    const { isPending, error, data: devices } = useDevices()
 
   if (isPending) return 'Loading...'
 
