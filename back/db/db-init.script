@@ -1,0 +1,23 @@
+CREATE DATABASE IF NOT EXISTS koerber;
+
+USE koerber;
+
+DROP TABLE IF EXISTS devices;
+
+CREATE TABLE devices
+(
+    id              INT NOT NULL AUTO_INCREMENT,
+    deviceName      VARCHAR(45) NOT NULL,
+    deviceType      VARCHAR(45) NOT NULL,
+    ownerName       VARCHAR(45) NOT NULL,
+    batteryStatus   INT NOT NULL DEFAULT 100,
+    PRIMARY KEY (id)
+) AUTO_INCREMENT = 1;
+
+
+INSERT INTO devices(deviceName, deviceType, ownerName, batteryStatus) VALUES ('Iphone', 'SMARTPHONE', 'koerber', 100);
+INSERT INTO devices(deviceName, deviceType, ownerName, batteryStatus) VALUES ('Cannon s20', 'CAMERA', 'Luiz', 5);
+INSERT INTO devices(deviceName, deviceType, ownerName, batteryStatus) VALUES ('Ipad', 'TABLET', 'koerber', 100);
+INSERT INTO devices(deviceName, deviceType, ownerName, batteryStatus) VALUES ('Ipad2', 'TABLET', 'koerber', 55);
+
+SELECT * FROM devices;
