@@ -1,19 +1,16 @@
-FROM node:20 as build-stage
+FROM node:20 as font-build
 
 WORKDIR /front
-COPY package.json .
-RUN npm install
+
 COPY . .
 
-ARG REACT_APP_API_BASE_URL
-ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
+COPY .env.sample .env
 
-RUN npm run build
+EXPOSE 5173
 
-# Stage 2
-FROM nginx:1.17.0-alpine
+RUN npm install
 
-COPY --from=build-stage /front/build /usr/share/nginx/html
-EXPOSE $REACT_DOCKER_PORT
+CMD ["npm", "run", "dev"]
 
-CMD nginx -g 'daemon off;'
+#docker build -t vite-trial .
+#docker run --rm -d -p 5173:5173 --name running-vite-trial vite-trial

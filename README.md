@@ -1,7 +1,7 @@
 # react-mysql-container
 Repo to test container orchestration with react+node+mysql
 
-> The docker-compose file was not properly tested yet
+
 
 ## The MySQl db
 It will be needed:

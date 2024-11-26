@@ -6,7 +6,7 @@ import { Device } from './types'
 const Card = ({ id, deviceName, deviceType, ownerName, batteryStatus }: Device) => {
     const { mutate: deleteDevice } = useDeleteDevice()
     return (<div className="wrapper">
-             <p>{deviceName}</p>
+             <p className='cardTitle'>{deviceName}</p>
              <p>Owner: {ownerName}</p>
              <p>Type: {deviceType}</p>
              <p>Battery: {batteryStatus}%</p>

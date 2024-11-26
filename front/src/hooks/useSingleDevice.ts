@@ -1,12 +1,13 @@
 import {
     useQuery,
   } from '@tanstack/react-query'
+import API_URL from '../api'
 
 const useSingleDevice = (id: string) => {
     const { isPending, error, data } = useQuery({
         queryKey: ['devices'],
         queryFn: () =>
-          fetch(`http://localhost:8800/devices/${id}`).then((res) =>
+          fetch(`${API_URL}/devices/${id}`).then((res) =>
             res.json(),
           ),
       })

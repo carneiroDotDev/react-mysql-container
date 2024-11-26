@@ -1,52 +1,62 @@
-services:
-  mysqldb:
-    image: mysql:5.7
-    restart: unless-stopped
-    env_file: ./.env
-    environment:
-      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - MYSQL_DATABASE=$MYSQLDB_DATABASE
-    ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+version: "3.8"
+
+services: 
+  mysql_trial:
+    container_name: running-mysql-trial
+    image: mysql
+    environment: 
+      MYSQL_DATABASE: koerber
+      MYSQL_USER: Luiz
+      MYSQL_PASSWORD: mysqldatabase
+      MYSQL_ROOT_PASSWORD: mysqldatabase
+      SERVICE_NAME: mysql_trial
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 60s
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports: 
+      - 3306:3306
+    expose:
+      - 3306
     volumes:
-      - db:/var/lib/mysql
+      - "./back/db/db-init.script:/docker-entrypoint-initdb.d/0_init.sql"
     networks:
-      - backend
-  
-  back:
-    depends_on:
-      - mysqldb
-    build: ./back
-    restart: unless-stopped
-    env_file: ./.env
-    ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-    environment:
-      - DB_HOST=mysqldb
-      - DB_USER=$MYSQLDB_USER
-      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - DB_NAME=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_DOCKER_PORT
-      - CLIENT_ORIGIN=$CLIENT_ORIGIN
-    networks:
-      - backend
-      - frontend
+      - internalnet
 
-  front:
-    depends_on:
-      - back
-    build:
+  node-trial:
+    container_name: running-server-trial
+    restart: always
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+    ports: 
+      - 7700:7700
+    # expose:
+    #   - 7700
+    depends_on: 
+      mysql_trial:
+        condition: service_healthy
+    networks:
+      - internalnet
+
+  vite-trial:
+    container_name: running-ui-trial
+    restart: always
+    build: 
       context: ./front
-      args:
-        - REACT_APP_API_BASE_URL=$CLIENT_API_BASE_URL
-    ports:
-      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+      dockerfile: Dockerfile
+    ports: 
+      - 5173:5173
+    expose:
+      - 5173
+    depends_on: 
+      mysql_trial:
+        condition: service_healthy
     networks:
-      - frontend
-
-volumes: 
-  db:
+      - internalnet
 
 networks:
-  backend:
-  frontend:
+  internalnet:
+     driver: bridge

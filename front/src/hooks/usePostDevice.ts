@@ -3,12 +3,13 @@ import {
     useQueryClient,
   } from '@tanstack/react-query'
 import { Device } from '../pages/types'
+import API_URL from '../api'
 
 const usePostDevice = () => {
     const queryClient = useQueryClient()
 
     const postDevice = async (device: Omit<Device, 'id'>): Promise<Response> => {
-        const data = await fetch(`http://localhost:8800/devices`, {                
+        const data = await fetch(`${API_URL}/devices`, {                
             method: "POST",
             body: JSON.stringify(device),
             headers: {
