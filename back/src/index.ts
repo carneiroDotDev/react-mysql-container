@@ -19,7 +19,7 @@ const db = mysql.createConnection({
 app.use(express.json());
 app.use(cors());
 
-//testing only
+//testing server connection
 app.get("/", (req, res) => {
   res.json("Server pinged!");
 });
